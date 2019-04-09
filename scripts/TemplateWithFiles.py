@@ -33,7 +33,7 @@ def main():
 	try:
 		#the option letter -h -o
 		# o: means that o take an argument
-		opts, args = getopt.getopt(sys.argv[1:], "ho:cm:r:s:p:f:w:vt:", ["help", "output=","clean","mqpar=","rawdirectory=","sample-description=","threads=","fasta=","working-directory=","verbose","temp=",])
+		opts, args = getopt.getopt(sys.argv[1:], "eho:cm:r:s:p:f:w:vt:", ["experiment","help", "output=","clean","mqpar=","rawdirectory=","sample-description=","threads=","fasta=","working-directory=","verbose","temp=",])
 	except getopt.GetoptError as err:
 		# print help information and exit:
 		print(err) # will print something like "option -a not recognized"
@@ -50,11 +50,14 @@ def main():
 	output = None
 	verbose = False
 	clean = False
+	Experiment =  False
 	for o, a in opts:
 		if o == "-v":
 			verbose = True
-		elif o == "-c":
+		elif o == ("-c","--clean"):
 			clean = True
+		elif o == ("-e","--experiment"):
+			Experiment = True
 		elif o in ("-h", "--help"):
 			Usage()
 			sys.exit()
@@ -82,25 +85,26 @@ def main():
 	Fasta.text = FastaPath
 	
 	Session = tree.xpath("/MaxQuantParams/name")[0]
-	Session.text="Pimprenelle"
+	Session.text="MaxQuantOnCalcsubQsub"
 	
-	Mods= tree.xpath("/MaxQuantParams/parameterGroups/parameterGroup/labelMods")[0]
-	ZeMods=etree.Element("string")
-	ZeMods.text="Arg10;Lys8"
-	Mods.append(ZeMods)
-	MaxLab= tree.xpath("/MaxQuantParams/parameterGroups/parameterGroup/maxLabeledAa")[0]
-	MaxLab.text="3"
-	#get to the first element of multiplicity and redefine it
-	Multiplicity= tree.xpath("/MaxQuantParams/parameterGroups/parameterGroup/multiplicity")[0]
-	Multiplicity.text="2"
-	#get to the first element of fixed modification and erased anything inside
-	fixedModifications=tree.xpath("/MaxQuantParams/parameterGroups/parameterGroup/fixedModifications/string")[0]
-	fixedModifications.getparent().remove(fixedModifications)
-	#get to the first element of variable modification and add a new string element 
-	variableModifications=tree.xpath("/MaxQuantParams/parameterGroups/parameterGroup/variableModifications")[0]
-	VarMod=etree.Element("string")
-	VarMod.text="Carbamidomethyl (C)"
-	variableModifications.append(VarMod)
+	if (Experiment ==  False):
+		Mods= tree.xpath("/MaxQuantParams/parameterGroups/parameterGroup/labelMods")[0]
+		ZeMods=etree.Element("string")
+		ZeMods.text="Arg10;Lys8"
+		Mods.append(ZeMods)
+		MaxLab= tree.xpath("/MaxQuantParams/parameterGroups/parameterGroup/maxLabeledAa")[0]
+		MaxLab.text="3"
+		#get to the first element of multiplicity and redefine it
+		Multiplicity= tree.xpath("/MaxQuantParams/parameterGroups/parameterGroup/multiplicity")[0]
+		Multiplicity.text="2"
+		#get to the first element of fixed modification and erased anything inside
+		fixedModifications=tree.xpath("/MaxQuantParams/parameterGroups/parameterGroup/fixedModifications/string")[0]
+		fixedModifications.getparent().remove(fixedModifications)
+		#get to the first element of variable modification and add a new string element 
+		variableModifications=tree.xpath("/MaxQuantParams/parameterGroups/parameterGroup/variableModifications")[0]
+		VarMod=etree.Element("string")
+		VarMod.text="Carbamidomethyl (C)"
+		variableModifications.append(VarMod)
 	
 	#Define the fixed search folder and the fixed combined folder 
 	JobFSF=MaxQuantWorkingDirectory+"/FixedSearchFolder"
@@ -154,7 +158,7 @@ def main():
 			RmFolder=LocalPath.replace(".raw","")
 			RmFolder="rm --recursive --verbose --force "+RmFolder
 			if clean:
-				os.system(RmIndex)
+				os.system(RmFolder)
 			
 			#create a new element short with the current file fraction index name and add it to the index 
 			Zefraction=etree.Element("short")
