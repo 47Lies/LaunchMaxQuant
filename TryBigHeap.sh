@@ -6,6 +6,7 @@
 #PBS -N MxQunt_BgDt
 #PBS -j oe
 
+
 #
 #We need to have the . 'dot' as decimal separator. In our current structure the Environment variable is set to french where the decimal separator is ','
 #
@@ -37,12 +38,66 @@
 #
 #
 
-
 export SINGULARITYENV_LANG="en_US.UTF-8"
 export LANG="en_US.UTF-8"
-#export SINGULARITYENV_MONO_GC_PARAMS=major=marksweep,max-heap-size=80g
-SAMPLE_DESCRIPTION_FILE=/data/users/ltaing/DATA_TMP/ltaing/Tumeurs_M5/SampleDescription.txt
-#SAMPLE_DESCRIPTION_FILE=/data/users/ltaing/DATA_TMP/ltaing/Tumeurs_M5/SampleDescription.Frist6Fractions.txt
-cd /bioinfo/users/ltaing/DATA_TMP/ltaing/Tumeurs_M5
-/data/users/ltaing/miniconda3/bin/python scripts/TemplateWithFiles.py  -t /local/scratch/${PBS_JOBID} -f /data/users/ltaing/DATA_TMP/ltaing/Tumeurs_M5/SP-Human-UP000005640-012018.fasta -w /data/users/ltaing/DATA_TMP/ltaing/Tumeurs_M5/ -p 32 -s /data/users/ltaing/DATA_TMP/ltaing/Tumeurs_M5/SampleDescription.txt -r /data/users/ltaing/DATA_TMP/ltaing/Tumeurs_M5/RAW -m /data/users/ltaing/DATA_TMP/ltaing/Tumeurs_M5/mqpar.template.1.6.2.6.xml -o /data/users/ltaing/DATA_TMP/ltaing/Tumeurs_M5/mqpar.Silac.AllSample.xml
-singularity exec /bioinfo/users/ltaing/mono-5.16.0.220.simg mono Version1.6.2.6/bin/MaxQuantCmd.exe /data/users/ltaing/DATA_TMP/ltaing/Tumeurs_M5/mqpar.Silac.AllSample.xml
+
+########################################################################
+#
+#
+#                        *** Coniguration Part ***
+#
+#
+########################################################################
+
+########################################################################
+#	Where Everything is
+#	What you smust change
+#
+WD=/bioinfo/users/ltaing/DATA_TMP/ltaing/Tumeurs_M5
+
+########################################################################
+#
+#	Your Files location
+#	What you should change
+#
+#	Sample description of your files
+#	Database fasta file of the tested proteins
+#	Thermo Fischer Raw files directory
+#
+#
+SampleDescriptionFile=${WD}/SampleDescription.txt
+DatabaseFastaFile=${WD}/SP-Human-UP000005640-012018.fasta
+RAW_Files_DIRECTORY=${WD}/RAW
+
+cd ${WD}
+########################################################################
+#
+#	Executables and Parameters files location
+#	What you should not change unless you known what you are doing
+#
+#	Template of 
+#	Database fasta file of the tested proteins
+#	Thermo Fischer Raw files directory
+#
+#
+TemplateMqparFile=/data/users/ltaing/DATA_TMP/ltaing/Tumeurs_M5/mqpar.template.1.6.2.6.xml
+MxQuntCmd=/bioinfo/users/ltaing/SOFTS/MaxQuantVersion1.6.2.6/bin/MaxQuantCmd.exe
+MonoSIMG=/bioinfo/users/ltaing/mono-5.16.0.220.simg
+TemporaryMqparFile=${WD}/mqpar.Silac.AllSample.xml
+
+
+if [[ -f "$TemplateMqparFile" ]];
+then
+ singularity exec ${MonoSIMG} mono ${MxQuntCmd} --create ${TemplateMqparFile}
+fi
+
+/data/users/ltaing/miniconda3/bin/python scripts/TemplateWithFiles.py -c\
+ -t /local/scratch/${PBS_JOBID}\
+ -f ${DatabaseFastaFile}\
+ -w ${WD}\
+ -p 32\
+ -s ${SampleDescriptionFile}\
+ -r ${RAW_Files_DIRECTORY}\
+ -m ${TemplateMqparFile}\
+ -o ${TemporaryMqparFile}
+singularity exec ${MonoSIMG} mono ${MxQuntCmd} ${TemporaryMqparFile}
