@@ -50,14 +50,18 @@ def main():
 	output = None
 	verbose = False
 	clean = False
-	Experiment =  True
+	Experiment = False
+	print(sys.argv[1:])
 	for o, a in opts:
-		if o == "-v":
+		if o in ("-v","--verbose"):
 			verbose = True
-		elif o == ("-c","--clean"):
-			clean = True
-		elif o == ("-e","--experiment"):
-			Experiment = False
+			print ("Verbose Mode")
+		elif o in ("-c","--clean"):
+			clean=True
+			print("Cleaning asked")
+		elif o in ("-e","--experiment"):
+			Experiment=True
+			print ("Pre Load SILAC experiment configuration will be load")
 		elif o in ("-h", "--help"):
 			Usage()
 			sys.exit()
@@ -77,14 +81,17 @@ def main():
 			Template=a
 		elif o in ("-o", "--output"):
 			OutputXML = a
+	if verbose:
+		print("Mqpar xml template file: ",Template)
 	tree = etree.parse(Template)
 	Fasta = tree.xpath("/MaxQuantParams/fastaFiles/FastaFileInfo/fastaFilePath")[0]
 	Fasta.text = FastaPath
-	
+	if verbose:
+		print("Database fasta file set to: ",FastaPath)
 	Session = tree.xpath("/MaxQuantParams/name")[0]
 	Session.text="MaxQuantOnCalcsubQsub"
 	
-	if (Experiment ==  True):
+	if Experiment:
 		Mods= tree.xpath("/MaxQuantParams/parameterGroups/parameterGroup/labelMods")[0]
 		ZeMods=etree.Element("string")
 		ZeMods.text="Arg10;Lys8"
@@ -107,23 +114,27 @@ def main():
 	JobFSF=MaxQuantWorkingDirectory+"/FixedSearchFolder"
 	FSF = tree.xpath("/MaxQuantParams/fixedSearchFolder")[0]
 	FSF.text=JobFSF
+	if verbose:
+		print("Fixed search folder set to: ",JobFSF)
 	if clean:
 		CreateOrClean(JobFSF)
-	
-	
 	JobFCF=MaxQuantWorkingDirectory+"/fixedCombinedFolder"
 	FCF = tree.xpath("/MaxQuantParams/fixedCombinedFolder")[0]
 	FCF.text=JobFCF
+	if verbose:
+		print("Fixed combined folder set to: ",JobFCF)
 	if clean:
 		CreateOrClean(JobFCF)
-	
 	TF=tree.xpath("/MaxQuantParams/tempFolder")[0]
 	TF.text=TempFolder
-	
+	if verbose:
+		print("Temporary folder set to: ",TempFolder)	
 	#get to the first element of numThreads and set the number of threads from the conf file
 	N =  tree.xpath("/MaxQuantParams/numThreads")[0]
+	#Will avoid some N.0 nonsense
 	N.text=str(Threads)
-	
+	if verbose:
+		print("N Threads set to: ",str(Threads))
 	#Empty enything in the file sections
 	RawFiles = tree.xpath("/MaxQuantParams/filePaths")[0]
 	RawFiles.clear()
@@ -135,7 +146,10 @@ def main():
 	PTMS.clear()
 	PGI = tree.xpath("/MaxQuantParams/paramGroupIndices")[0]
 	PGI.clear()
-	
+	if verbose:
+		print("Absolute path to RAW directory: ",RAW_DIR)
+	if verbose:
+		print("Opening sample description file: ",SampleDescription)
 	with open(SampleDescription) as f:
 		header_line = next(f)
 		for line in f:
@@ -176,6 +190,8 @@ def main():
 			ZePGI=etree.Element("int")
 			ZePGI.text=LocalParamGroupIndices
 			PGI.append(ZePGI)
+	if verbose:
+		print("Writing temporary mqpar file: ",OutputXML)
 	tree.write(OutputXML,xml_declaration=True,encoding='UTF-8',pretty_print=True)
 
 
