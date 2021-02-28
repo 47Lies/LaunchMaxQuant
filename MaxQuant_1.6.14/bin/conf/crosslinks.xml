@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<crosslinks xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <crosslink title="DSS" description="Disuccinimidyl suberate" create_date="2012-07-22T19:30:51.122051+02:00"
+             last_modified_date="2015-09-06T23:34:46.8422502+02:00" user="cox"
+             linkedComposition="H(10) C(8) O(2)" hydrolyzedComposition="H(12) C(8) O(3)"
+             specificity1="K" proteinNterm1="true" proteinCterm1="false"
+             specificity2="K" proteinNterm2="true" proteinCterm2="false"
+             crosslinkFragmentLongComposition="" crosslinkFragmentShortLongComposition="" mscleavable="false">
+    <position1>anywhere</position1>
+    <position2>anywhere</position2>
+  </crosslink>
+  <crosslink title="BS3" description="Bis(sulfosuccinimidyl)suberate)" create_date="2020-03-22T10:49:44.7751314+01:00"
+             last_modified_date="2020-03-22T10:51:43.9354477+01:00" user="yilmaz" linkedComposition="H(10) C(8) O(2)"
+             hydrolyzedComposition="H(12) C(8) O(3)" crosslinkFragmentLongComposition=""
+             crosslinkFragmentShortComposition="" specificity1="K" proteinNterm1="true" proteinCterm1="false"
+             specificity2="K" proteinNterm2="true" proteinCterm2="false" mscleavable="false">
+    <position1>anywhere</position1>
+    <position2>anywhere</position2>
+  </crosslink>
+  <crosslink title="Formaldehyde" description="Formaldehyde" create_date="2020-03-22T11:11:45.3620682+01:00"
+             last_modified_date="2020-03-22T11:13:23.3223663+01:00" user="yilmaz" linkedComposition="C(1)"
+             hydrolyzedComposition="" crosslinkFragmentLongComposition="" crosslinkFragmentShortComposition=""
+             specificity1="K" proteinNterm1="true" proteinCterm1="false" specificity2="HRWYQN" proteinNterm2="true"
+             proteinCterm2="false" mscleavable="false">
+    <position1>anywhere</position1>
+    <position2>anywhere</position2>
+  </crosslink>
+  <crosslink title="DSSO" description="Disuccinimidyl sulfoxide" create_date="2020-03-22T11:13:39.089249+01:00"
+             last_modified_date="2020-03-22T11:19:50.8093583+01:00" user="yilmaz" linkedComposition="H(6) C(6) O(3) S"
+             hydrolyzedComposition="H(8) C(6) O(4) S" crosslinkFragmentLongComposition="H(2) C(3) O S"
+             crosslinkFragmentShortComposition="H(2) C(3) O" specificity1="K" proteinNterm1="true"
+             proteinCterm1="false" specificity2="K" proteinNterm2="true" proteinCterm2="false" mscleavable="true">
+    <position1>anywhere</position1>
+    <position2>anywhere</position2>
+  </crosslink>
+  <crosslink title="DSBU" description="Disuccinimidyl dibutyric urea" create_date="2020-03-22T11:13:39.089249+01:00"
+             last_modified_date="2020-03-22T11:19:50.8093583+01:00" user="yilmaz" linkedComposition="H(12) C(9) O(3) S N(2)"
+             hydrolyzedComposition="H(14) C(9) O(4) S N(2)" crosslinkFragmentLongComposition="H(5) C(5) O(2) N"
+             crosslinkFragmentShortComposition="H(7) C(4) O N" specificity1="K" proteinNterm1="true"
+             proteinCterm1="false" specificity2="K" proteinNterm2="true" proteinCterm2="false" mscleavable="true">
+    <position1>anywhere</position1>
+    <position2>anywhere</position2>
+  </crosslink>
+
+</crosslinks>

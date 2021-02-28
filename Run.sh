@@ -1,17 +1,40 @@
-#PBS -l mem=10gb
-#PBS -l walltime=1800:00:00
+#PBS -l nodes=1:ppn=60
+#PBS -l mem=200gb
+#PBS -l walltime=240:00:00
+#PBS -q 'mpi'
 #PBS -j oe
 
-source /bioinfo/users/${LOGNAME}/.bashrc
-WD=/data/users/ltaing/DATA_TMP/ltaing/IsoAndSpe
-if [ "$HOSTNAME" == "u900-bdd-1-185n-6925.curie.fr" ]
+#source ~/.bashrc
+#conda activate mono
+
+Mass_Spec_SampleDescriptionFile=SampleDescription.txt
+
+
+
+
+
+if [[ ! -z ${PBS_JOBID} ]];
 then
- LocalProfile="standard"
+cd ${PBS_O_WORKDIR}
+WORKDIR=/local/scratch/${PBS_JOBID}
+mkdir -p ${WORKDIR}/RAW
+cp RAW/*.raw ${WORKDIR}/RAW
+cp ${DATABASE} ${WORKDIR}/${DATABASE}
+WORKERS=${PBS_NUM_PPN}
 else
- LocalProfile="cluster"
+WORKDIR=`pwd -P`
+WORKERS=1
 fi
-
-cd ${WD}
-nextflow run Main.nf -c Nextflow.Config.yaml -profile ${LocalProfile} -resume
-
-
+echo $WORKDIR
+${WORKDIR}/TemplateWithFiles.py -c\
+ -f ${WORKDIR}/${DATABASE}\
+ -t ${WORKDIR}\
+ -w ${WORKDIR}\
+ -p ${WORKERS}\
+ -s ${Mass_Spec_SampleDescriptionFile}\
+ -r ${WORKDIR}/RAW\
+ -m mqpar.xml\
+ -o Temporary.mqpar.xml
+mono MaxQuant_1.6.14/bin/MaxQuantCmd.exe Temporary.mqpar.xml --dryrun
+mkdir -p RESULTS
+mv ${WORKDIR}/fixedCombinedFolder/combined/txt/* RESULTS/.

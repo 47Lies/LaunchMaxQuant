@@ -1,0 +1,7 @@
+name: mono
+channels:
+  - conda-forge/label/cf202003
+  - anaconda
+dependencies:
+  - conda-forge/label/cf202003::mono=5.14.0
+  - anaconda::lxml=4.5.2
