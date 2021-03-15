@@ -1,16 +1,13 @@
-#PBS -l nodes=1:ppn=60
-#PBS -l mem=200gb
+#PBS -l nodes=1:ppn=8
+#PBS -l mem=64gb
 #PBS -l walltime=240:00:00
-#PBS -q 'mpi'
 #PBS -j oe
 
-#source ~/.bashrc
-#conda activate mono
+source ~/.bashrc
+conda activate mono
 
 Mass_Spec_SampleDescriptionFile=SampleDescription.txt
-
-
-
+DATABASE=uniprot_sprot.9606.fasta
 
 
 if [[ ! -z ${PBS_JOBID} ]];
@@ -18,23 +15,24 @@ then
 cd ${PBS_O_WORKDIR}
 WORKDIR=/local/scratch/${PBS_JOBID}
 mkdir -p ${WORKDIR}/RAW
-cp RAW/*.raw ${WORKDIR}/RAW
-cp ${DATABASE} ${WORKDIR}/${DATABASE}
+#cp RAW/* ${WORKDIR}/RAW
+#cp ${DATABASE} ${WORKDIR}/${DATABASE}
 WORKERS=${PBS_NUM_PPN}
 else
-WORKDIR=`pwd -P`
-WORKERS=1
+WORKDIR=${PBS_O_WORKDIR}
+WORKERS=8
 fi
-echo $WORKDIR
-${WORKDIR}/TemplateWithFiles.py -c\
- -f ${WORKDIR}/${DATABASE}\
- -t ${WORKDIR}\
- -w ${WORKDIR}\
+echo "workdir $WORKDIR"
+echo "path $PWD"
+${PWD}/TemplateWithFiles.py -c\
+ -f ${PWD}/${DATABASE}\
+ -t ${PWD}\
+ -w ${PWD}\
  -p ${WORKERS}\
  -s ${Mass_Spec_SampleDescriptionFile}\
- -r ${WORKDIR}/RAW\
+ -r ${PWD}/RAW\
  -m mqpar.xml\
  -o Temporary.mqpar.xml
-mono MaxQuant_1.6.14/bin/MaxQuantCmd.exe Temporary.mqpar.xml --dryrun
+mono MaxQuant_1.6.14/bin/MaxQuantCmd.exe Temporary.mqpar.xml
 mkdir -p RESULTS
-mv ${WORKDIR}/fixedCombinedFolder/combined/txt/* RESULTS/.
+mv ${PWD}/fixedCombinedFolder/combined/txt/* RESULTS/.
