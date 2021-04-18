@@ -205,7 +205,7 @@ def main():
       PGI.append(ZePGI)
 
       ZeRC=etree.Element("string")
-      ZeRC.text=LocaLocalReferenceChannel
+      ZeRC.text=""
       RC.append(ZeRC)
   if verbose:
     print("Writing temporary mqpar file: ",OutputXML)
