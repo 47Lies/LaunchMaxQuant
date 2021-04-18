@@ -157,6 +157,8 @@ def main():
   PTMS.clear()
   PGI = tree.xpath("/MaxQuantParams/paramGroupIndices")[0]
   PGI.clear()
+  RC = tree.xpath("/MaxQuantParams/referenceChannel")[0]
+  RC.clear()
   if verbose:
     print("Absolute path to RAW directory: ",RAW_DIR)
   if verbose:
@@ -164,7 +166,7 @@ def main():
   with open(SampleDescription) as f:
     header_line = next(f)
     for line in f:
-      LocalFile,LocalExperiment,LocalFraction,LocalPTMS,LocalParamGroupIndices=line.rstrip().split("\t")
+      LocalFile,LocalExperiment,LocalFraction,LocalPTMS,LocalParamGroupIndices,LocalReferenceChannel=line.rstrip().split("\t")
       ZefilePath=etree.Element("string")
       LocalPath=RAW_DIR+"/"+LocalFile
       ZefilePath.text=LocalPath
@@ -201,6 +203,10 @@ def main():
       ZePGI=etree.Element("int")
       ZePGI.text=LocalParamGroupIndices
       PGI.append(ZePGI)
+
+      ZeRC=etree.Element("string")
+      ZeRC.text=LocaLocalReferenceChannel
+      RC.append(ZeRC)
   if verbose:
     print("Writing temporary mqpar file: ",OutputXML)
   tree.write(OutputXML,xml_declaration=True,encoding='UTF-8',pretty_print=True)
