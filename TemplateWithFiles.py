@@ -166,7 +166,7 @@ def main():
   with open(SampleDescription) as f:
     header_line = next(f)
     for line in f:
-      LocalFile,LocalExperiment,LocalFraction,LocalPTMS,LocalParamGroupIndices,LocalReferenceChannel=line.rstrip().split("\t")
+      LocalFile,LocalExperiment,LocalFraction,LocalPTMS,LocalParamGroupIndices=line.rstrip().split("\t")
       ZefilePath=etree.Element("string")
       LocalPath=RAW_DIR+"/"+LocalFile
       ZefilePath.text=LocalPath
