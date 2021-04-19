@@ -1,3 +1,4 @@
+FileName        Experiment      Fraction        PTMS    ParamGroupIndices
 QE2_150130_OPL2036_ACH_alt_splicing_A1.raw	siNT1	1	FALSE	0	
 QE2_150130_OPL2036_ACH_alt_splicing_A2.raw	siNT1	2	FALSE	0	
 QE2_150130_OPL2036_ACH_alt_splicing_C1.raw	siSF3B1	1	FALSE	0	
