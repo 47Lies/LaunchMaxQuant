@@ -94,6 +94,9 @@ def main():
   tree = etree.parse(Template)
   Fasta = tree.xpath("/MaxQuantParams/fastaFiles/FastaFileInfo/fastaFilePath")[0]
   Fasta.text = FastaPath
+  Fasta = tree.xpath("/MaxQuantParams/fastaFiles/FastaFileInfo/identifierParseRule")[0]
+  Fasta.text = ">([^\s]*)"
+  
   if verbose:
     print("Database fasta file set to: ",FastaPath)
   Session = tree.xpath("/MaxQuantParams/name")[0]
