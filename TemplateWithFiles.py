@@ -166,7 +166,7 @@ def main():
   with open(SampleDescription) as f:
     header_line = next(f)
     for line in f:
-      LocalFile,LocalExperiment,LocalFraction,LocalPTMS,LocalParamGroupIndices=line.rstrip().split("\t")
+      LocalFile,LocalExperiment,LocalFraction,LocalPTMS,LocalParamGroupIndices,LocalReferenceChannel=line.rstrip().split("\t")
       ZefilePath=etree.Element("string")
       LocalPath=RAW_DIR+"/"+LocalFile
       ZefilePath.text=LocalPath
@@ -205,7 +205,7 @@ def main():
       PGI.append(ZePGI)
 
       ZeRC=etree.Element("string")
-      ZeRC.text=""
+      ZeRC.text=LocalReferenceChannel
       RC.append(ZeRC)
   if verbose:
     print("Writing temporary mqpar file: ",OutputXML)
